@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Marzley WiFi Hotspot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <style>
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #8d8686;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 10px auto;
+        background: #fff;
+        padding: 32px 28px;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(45, 124, 247, 0.08);
+      }
+
+      .logo {
+        display: block;
+        margin: 0 auto 20px auto;
+        width: 120px;
+      }
+
+      .instructions {
+        background: #f0f4ff;
+        border-radius: 10px;
+        padding: 18px 24px;
+        margin-bottom: 22px;
+        box-shadow: 0 2px 8px rgba(45, 124, 247, 0.04);
+      }
+
+      .instructions h3 {
+        margin-top: 0;
+        color: #2d7cf7;
+      }
+
+      .instructions ol {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .help {
+        text-align: center;
+        margin: 18px 0 10px 0;
+        font-size: 1.08em;
+      }
+
+      .help a {
+        color: #2d7cf7;
+        text-decoration: underline;
+        font-weight: bold;
+      }
+
+      .login-btn {
+        background: #2d7cf7;
+        color: #fff;
+        border: none;
+        padding: 8px 22px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1em;
+        margin: 8px 0;
+        box-shadow: 0 2px 8px rgba(45, 124, 247, 0.08);
+      }
+
+      .tabs {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin: 24px 0 18px 0;
+        flex-wrap: wrap;
+      }
+
+      .tab {
+        background: #f0f4ff;
+        border: none;
+        padding: 8px 24px;
+        border-radius: 8px;
+        font-size: 1em;
+        color: #2d7cf7;
+        cursor: pointer;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(45, 124, 247, 0.04);
+        transition: background 0.2s;
+        margin-bottom: 8px;
+      }
+
+      .tab.active {
+        background: #2d7cf7;
+        color: #fff;
+      }
+
+      .packages {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        justify-content: center;
+        margin-top: 10px;
+      }
+
+      .package-btn {
+        background: #fff;
+        border: 2px solid #e3f0ff;
+        border-radius: 12px;
+        padding: 12px 8px;
+        min-width: 0;
+        box-shadow: 0 2px 8px rgba(45, 124, 247, 0.06);
+        font-size: 0.98em;
+        color: #2d7cf7;
+        cursor: pointer;
+        transition: border 0.2s, box-shadow 0.2s, transform 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        font-weight: 500;
+        word-break: break-word;
+      }
+
+      .package-btn:hover {
+        border: 2px solid #2d7cf7;
+        box-shadow: 0 4px 16px rgba(45, 124, 247, 0.12);
+        transform: scale(1.04);
+      }
+
+      .package-btn .package-icon {
+        font-size: 1.5em;
+        margin-bottom: 4px;
+      }
+
+      .package-btn .package-title {
+        font-size: 1em;
+        margin-bottom: 2px;
+      }
+
+      .package-btn .package-desc {
+        font-size: 0.9em;
+        color: #888;
+      }
+
+      .footer {
+        margin-top: 28px;
+        text-align: center;
+        font-size: 1.08em;
+        color: #2d7cf7;
+        background: #f0f4ff;
+        border-radius: 8px;
+        padding: 12px;
+      }
+
+      .terms {
+        font-size: 0.95em;
+        color: #888;
+        margin-top: 18px;
+        text-align: center;
+      }
+
+      @media (max-width: 900px) {
+        .container {
+          max-width: 98vw;
+          padding: 12px;
+        }
+
+        .packages {
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 10px;
+        }
+
+        .package-btn {
+          font-size: 0.95em;
+          padding: 10px 6px;
+        }
+
+        .logo {
+          width: 60px !important;
+          height: 60px !important;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 4px;
+        }
+
+        .packages {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+
+        .package-btn {
+          font-size: 0.92em;
+          padding: 8px 4px;
+        }
+
+        h1 {
+          font-size: 1.3em !important;
+        }
+
+        .logo {
+          width: 44px !important;
+          height: 44px !important;
+        }
+
+        .instructions,
+        .footer,
+        .terms {
+          font-size: 0.95em;
+          padding: 10px;
+        }
+
+        .tabs {
+          gap: 6px;
+          font-size: 0.95em;
+        }
+
+        .tab {
+          padding: 8px 10px;
+          font-size: 0.95em;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+    <div
+      style="
+        text-align: center;
+        background: linear-gradient(90deg, #2d7cf7 0%, #43e97b 100%);
+        color: #000000;
+        border-radius: 14px;
+        padding: 28px 12px 18px 12px;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 16px rgba(45, 124, 247, 0.12);
+      "
+    >
+      <h1
+        style="
+        margin: 0;
+        font-size: 2.2em;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        letter-spacing: 1px;
+        font-weight: 700;
+        "
+      >
+        Marzley Tech Solutions
+      </h1>
+      <span
+        style="
+        font-size: 1.1em;
+        color: #e3f0ff;
+        font-weight: 400;
+        display: block;
+        margin-top: 8px;
+        letter-spacing: 0.5px;
+        "
+      >
+        Turning Ideas Into Reality
+      </span>
+    </div>
+      <img
+        src="dev.png"
+        alt="NCS Logo"
+        class="logo"
+        style="
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          border: 4px solid #2d7cf7;
+          box-shadow: 0 2px 8px rgba(45, 124, 247, 0.1);
+        "
+      />
+      <div class="instructions">
+        <h3>🛈 How to purchase:</h3>
+        <ol>
+          <li>Tap the package you want to purchase</li>
+          <li>Enter your Mobile Money phone number</li>
+          <li>Click subscribe</li>
+          <li>Enter your Mobile Money PIN in the prompt</li>
+          <li>Wait a few seconds to be connected</li>
+          <li>
+            If not connected, contact customer care <strong>0745789590</strong>
+          </li>
+        </ol>
+      </div>
+      <div class="help">
+        Need help? <a href="tel:0769646998">0745789590</a><br />
+        <span style="color: #888">Already subscribed?</span><br />
+        <button class="login-btn">🔑 Login / Activate Package</button>
+      </div>
+      <div class="tabs">
+  <button class="tab" id="tab-trial" onclick="showTab('trial')">🎁 Trial</button>
+  <button class="tab active" id="tab-unlimited" onclick="showTab('unlimited')">🗃️ Unlimited</button>
+  <button class="tab" id="tab-bundles" onclick="showTab('bundles')">🔒 Bundles</button>
+</div>
+      <div class="packages">
+        <button
+          class="package-btn daily"
+          onclick="payWithPaystack(50, 'Daily Pass', '24 Hours')"
+        >
+          <span class="package-icon" style="color: #43e97b">📱</span>
+          <span class="package-title">Daily Pass</span>
+          <span class="package-desc">KES 50 • 24 Hours</span>
+        </button>
+        <button
+          class="package-btn weekly"
+          onclick="payWithPaystack(250, 'Weekly Pass', '7 Days')"
+        >
+          <span class="package-icon" style="color: #2d7cf7">🗓️</span>
+          <span class="package-title">Weekly Pass</span>
+          <span class="package-desc">KES 250 • 7 Days</span>
+        </button>
+        <button
+          class="package-btn monthly"
+          onclick="payWithPaystack(900, 'Monthly Pass', '30 Days')"
+        >
+          <span class="package-icon" style="color: #f7971e">📆</span>
+          <span class="package-title">Monthly Pass</span>
+          <span class="package-desc">KES 900 • 30 Days</span>
+        </button>
+        <button
+          class="package-btn trial"
+          onclick="payWithPaystack(10, '2hrs @ Ksh 10', '2 Hours')"
+        >
+          <span class="package-icon" style="color: #888">⏰</span>
+          <span class="package-title">2hrs @ Ksh 10</span>
+          <span class="package-desc">for 2 Hours</span>
+        </button>
+        <button
+          class="package-btn trial"
+          onclick="payWithPaystack(20, '3hrs @ Ksh 20', '3 Hours')"
+        >
+          <span class="package-icon" style="color: #888">⏰</span>
+          <span class="package-title">3hrs @ Ksh 20</span>
+          <span class="package-desc">for 3 Hours</span>
+        </button>
+        <button
+          class="package-btn trial"
+          onclick="payWithPaystack(35, '6hrs @ Ksh 35', '6 Hours')"
+        >
+          <span class="package-icon" style="color: #888">⏰</span>
+          <span class="package-title">6hrs @ Ksh 35</span>
+          <span class="package-desc">for 6 Hours</span>
+        </button>
+        <button
+          class="package-btn unlimited"
+          onclick="payWithPaystack(45, '24hrs @ Ksh 45', '1 Day')"
+        >
+          <span class="package-icon" style="color: #1a5bb8">🔓</span>
+          <span class="package-title">24hrs @ Ksh 45</span>
+          <span class="package-desc">for 1 Day</span>
+        </button>
+        <button
+          class="package-btn unlimited"
+          onclick="payWithPaystack(60, 'Buy for 2 Devices. @ Ksh 60', '1 Day')"
+        >
+          <span class="package-icon" style="color: #1a5bb8">👥</span>
+          <span class="package-title">Buy for 2 Devices. @ Ksh 60</span>
+          <span class="package-desc">for 1 Day</span>
+        </button>
+        <button
+          class="package-btn unlimited"
+          onclick="payWithPaystack(80, 'Buy for 3 Devices @ Ksh 80', '1 Day')"
+        >
+          <span class="package-icon" style="color: #1a5bb8">👨‍👩‍👧</span>
+          <span class="package-title">Buy for 3 Devices @ Ksh 80</span>
+          <span class="package-desc">for 1 Day</span>
+        </button>
+        <button
+          class="package-btn unlimited"
+          onclick="payWithPaystack(85, '2 Days @ Ksh 85', '2 Days')"
+        >
+          <span class="package-icon" style="color: #1a5bb8">⏳</span>
+          <span class="package-title">2 Days @ Ksh 85</span>
+          <span class="package-desc">for 2 Days</span>
+        </button>
+        <button
+          class="package-btn unlimited"
+          onclick="payWithPaystack(300, '1 WEEK PACKAGE @ Ksh 300', '7 Days')"
+        >
+          <span class="package-icon" style="color: #1a5bb8">📦</span>
+          <span class="package-title">1 WEEK PACKAGE @ Ksh 300</span>
+          <span class="package-desc">for 7 Days</span>
+        </button>
+        <button
+          class="package-btn unlimited"
+          onclick="payWithPaystack(500, '2 WEEKS PACKAGE @ Ksh 500', '14 Days')"
+        >
+          <span class="package-icon" style="color: #1a5bb8">📦</span>
+          <span class="package-title">2 WEEKS PACKAGE @ Ksh 500</span>
+          <span class="package-desc">for 14 Days</span>
+        </button>
+      </div>
+      <div id="trial-card" style="display:none; justify-content:center; margin:18px 0;">
+  <div style="
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(45,124,247,0.12);
+    padding:22px 24px;
+    min-width:240px;
+    text-align:center;
+    border:1.5px solid #e3f0ff;
+  ">
+    <div style="font-size:1.2em; font-weight:700; margin-bottom:6px; color:#222;">FREE TRIAL</div>
+    <div style="color:#444; margin-bottom:14px;">Free Trial - Valid for 3 Minutes</div>
+    <button onclick="startFreeTrial()" style="
+      background:#2d7cf7;
+      color:#fff;
+      border:none;
+      border-radius:7px;
+      padding:10px 0;
+      width:100%;
+      font-size:1em;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:0 2px 8px rgba(45,124,247,0.08);
+    ">Start Free Trial</button>
+  </div>
+</div>
+      <div id="bundles-card" style="display:none; justify-content:center; margin:18px 0;">
+  <div style="display:flex; gap:16px; flex-wrap:wrap;">
+    <div style="
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 2px 8px rgba(45,124,247,0.12);
+      padding:18px 22px;
+      min-width:180px;
+      text-align:center;
+      border:1.5px solid #e3f0ff;
+    ">
+      <div style="font-size:1.08em; font-weight:700; margin-bottom:4px; color:#222;">3Gb @ Ksh 20</div>
+      <div style="color:#444;">valid for 3 Hours</div>
+    </div>
+    <div style="
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 2px 8px rgba(45,124,247,0.12);
+      padding:18px 22px;
+      min-width:180px;
+      text-align:center;
+      border:1.5px solid #e3f0ff;
+    ">
+      <div style="font-size:1.08em; font-weight:700; margin-bottom:4px; color:#222;">6Gb @ Ksh 35</div>
+      <div style="color:#444;">valid for 1 Day</div>
+    </div>
+    <div style="
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 2px 8px rgba(45,124,247,0.12);
+      padding:18px 22px;
+      min-width:180px;
+      text-align:center;
+      border:1.5px solid #e3f0ff;
+    ">
+      <div style="font-size:1.08em; font-weight:700; margin-bottom:4px; color:#222;">10Gb @ Ksh 90</div>
+      <div style="color:#444;">valid for 3 Days</div>
+    </div>
+    <div style="
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 2px 8px rgba(45,124,247,0.12);
+      padding:18px 22px;
+      min-width:180px;
+      text-align:center;
+      border:1.5px solid #e3f0ff;
+    ">
+      <div style="font-size:1.08em; font-weight:700; margin-bottom:4px; color:#222;">30Gb @ Ksh 190</div>
+      <div style="color:#444;">valid for 7 Days</div>
+    </div>
+  </div>
+</div>
+      <div class="terms">
+        By subscribing, you agree to our <a href="#">Terms & Conditions</a>
+      </div>
+      <div class="footer">
+        <strong>Safe. Simple. Instant.</strong><br />
+        With Paystack, your payment is quick and your connection starts
+        immediately.<br />
+        No stress, no delays.
+      </div>
+    </div>
+    <footer
+      style="
+        text-align: center;
+        background: #2d7cf7;
+        color: #fff;
+        padding: 16px 0;
+        margin-top: 30px;
+        font-size: 1.1em;
+      "
+    >
+      &copy; 2025 Marzley Tech Solutions. All rights reserved.
+    </footer>
+    <script>
+      function payWithPaystack(amount, packageName, duration) {
+        var email = prompt("Enter your email address:");
+        if (!email) return;
+        var handler = PaystackPop.setup({
+          key: "pk_live_60a185fa3aad8a497acdd0013d119219ca5a19c2", // Replace with your Paystack public key
+          email: email,
+          amount: amount * 100, // Paystack expects amount in kobo
+          currency: "KES",
+          ref: "MWIFI-" + Math.floor(Math.random() * 1000000000 + 1),
+          metadata: {
+            custom_fields: [
+              {
+                display_name: "Package",
+                variable_name: "package",
+                value: packageName,
+              },
+              {
+                display_name: "Duration",
+                variable_name: "duration",
+                value: duration,
+              },
+            ],
+          },
+          callback: function (response) {
+            alert("Payment complete! Reference: " + response.reference);
+            // TODO: Activate package for user here
+          },
+          onClose: function () {
+            alert("Transaction was not completed, window closed.");
+          },
+        });
+        handler.openIframe();
+      }
+
+      function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+  document.getElementById('trial-card').style.display = 'none';
+  document.querySelector('.packages').style.display = 'none';
+  document.getElementById('bundles-card').style.display = 'none';
+
+  if(tab === 'trial') {
+    document.getElementById('tab-trial').classList.add('active');
+    document.getElementById('trial-card').style.display = 'flex';
+  } else if(tab === 'unlimited') {
+    document.getElementById('tab-unlimited').classList.add('active');
+    document.querySelector('.packages').style.display = 'grid';
+  } else if(tab === 'bundles') {
+    document.getElementById('tab-bundles').classList.add('active');
+    document.getElementById('bundles-card').style.display = 'flex';
+  }
+}
+
+      function startFreeTrial() {
+        var phone = prompt("Enter your Mobile Money phone number for the trial:");
+        if (!phone) return;
+        // Here you would typically call your backend to register the trial
+        alert("Free trial activated! Duration: 3 minutes. Phone: " + phone);
+        // TODO: Implement actual trial activation logic
+      }
+
+      // Initialize by showing the unlimited tab content
+      document.addEventListener('DOMContentLoaded', function() {
+  showTab('unlimited');
+});
+    </script>
+  </body>
+</html>
